@@ -22,8 +22,7 @@ st.markdown("## The paper")
 st.markdown("""
 > **Schenone, P. (2025).** *The Hitchhiker's Guide to the Grading Galaxy.*
 
-<!-- TODO: Replace with the actual paper URL (arXiv / SSRN / journal) -->
-[Placeholder link to paper](https://example.com/hitchhiker-grading-galaxy)
+https://sites.google.com/site/pschenone/home?pli=1#h.te52tm9oem0y
 
 The paper develops the full theoretical framework: a microfoundation for
 student types based on effort cost and productivity, a formal model of
