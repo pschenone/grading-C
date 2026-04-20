@@ -135,7 +135,7 @@ A: Yes, but we recommend anonymous labels (`Student 1, Student 2, ...`) as a bes
 A: For a typical class (15–40 students) with default settings (4 chains × 5000 iterations), expect 30–60 seconds on Streamlit's free tier.
 
 **Q: The convergence diagnostic is yellow. Should I worry?**
-A: Yellow means your results are usable but not perfect. Try doubling the iterations in the Advanced expander and re-running. If it stays yellow or goes green, you're fine. If it goes red, something's off with your data (e.g., a very unusual score distribution).
+A: Yellow means your results are usable but not perfect. By default, the tool auto-retries with doubled iterations (up to 2 extra attempts) when diagnostics don't meet the strict targets — so if you see yellow at the end, the sampler has already tried escalating. You can raise the retry cap to 3 in the Advanced expander, or manually bump iterations per chain. If it goes red, something's off with your data (e.g., a very unusual score distribution or a class too small for the prior).
 
 **Q: What about the research experiments comparing BAG to Fixed Scale Grading and curving?**
 A: Those are a research artifact, not part of the web tool. They'd need to live in a separate `experiments/` directory in this repo, portable from the `Final.py` reference code.

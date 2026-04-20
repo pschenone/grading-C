@@ -28,7 +28,9 @@ $$
 
 where $\pi_0$ is the prior grade distribution (set by the user) and $K_\pi$
 is the prior concentration, auto-calibrated so that the prior-predictive
-probability of seeing at least one A in a class of size $N$ exceeds 95%.
+probability of seeing at least one A in a class of size $N$ is at least
+$1 - \text{TAIL\_PI}$ (default TAIL_PI = 0.05, i.e. 95% chance of at least
+one A).
 
 ### The exam microfoundation (EDSE)
 
@@ -138,6 +140,14 @@ We report:
 
 The home page surfaces these through a three-state status badge; the JSON
 and PDF downloads contain the raw numbers.
+
+**Auto-retry.** If the first run fails the R̂ or ESS targets, the tool
+automatically doubles the iteration count and re-runs, up to a
+user-configurable cap (default 2 retries, i.e. up to 3 total attempts:
+5000 → 10000 → 20000 iters per chain). The "Iters / chain" metric in the
+results panel shows the actual iteration count used, so users always see
+a receipt of how much work was done. Users who want a single,
+deterministic run can set retries to 0 in the Advanced expander.
 
 ### Identification
 

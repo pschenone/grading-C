@@ -315,12 +315,13 @@ with st.expander("Customize: exam structure and grade distribution"):
     with col_wizard:
         st.markdown("**Not sure what Q is?**")
         num_q = st.number_input("Questions on the exam",
-                                min_value=1, value=10, step=1,
+                                min_value=1, value=12, step=1,
                                 key="wizard_nq")
         scale = st.selectbox(
             "Each question graded in increments of",
             ["Full points", "Half points", "Third points",
              "Quarter points", "Fifth points"],
+            index=4,
             key="wizard_scale",
         )
         scale_factor = {"Full points": 1, "Half points": 2, "Third points": 3,
@@ -396,7 +397,7 @@ with st.expander("Advanced — you don't need this", expanded=False):
     with col2:
         n_chains = st.number_input("MCMC chains", 1, 8, 4, 1)
         iters_per_chain = st.number_input("Iterations per chain (starting)",
-                                          1000, 25000, 3000, 500,
+                                          1000, 25000, 5000, 500,
                                           help="Starting iterations. If the "
                                                "run fails convergence, iterations "
                                                "are doubled automatically up to "
@@ -407,7 +408,7 @@ with st.expander("Advanced — you don't need this", expanded=False):
             index=2,
             help="How many times to double iterations when R̂ or ESS "
                  "fails. 0 = no retry (single run, most transparent). "
-                 "2 = up to 3 attempts (e.g., 3000 → 6000 → 12000). Matches "
+                 "2 = up to 3 attempts (e.g., 5000 → 10000 → 20000). Matches "
                  "the behavior of the reference implementation.",
         )
         rhat_target = st.number_input(

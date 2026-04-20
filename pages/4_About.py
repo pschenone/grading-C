@@ -108,5 +108,5 @@ The UI is original.
 st.markdown("## Version")
 
 st.markdown("""
-This instance of BAG Grader is at version **0.1.0**.
+This instance of BAG Grader is at version **0.2.0**.
 """)

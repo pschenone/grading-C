@@ -70,13 +70,25 @@ defend to a student who asks.
 ### How BAG "learns" from your class
 
 BAG has a **prior belief** about how many students of each type there are.
-You can set this to "roughly normal," "skewed high," "skewed low," or leave
-it near-uniform so the data dominates.
+You can pick from six presets — including a baseline business-school
+prior (the default), two alternative shapes from the paper, a near-uniform
+"let the data decide" option, and honors/intro-class skewed presets.
 
 The sampler then looks at the actual class scores and **updates** that belief.
 If your prior said 10% A's but the data strongly suggests 20%, the posterior
 shifts toward 20%. If you want to enforce a strict quota, you can tell BAG
 not to update — but that's usually not what you want.
+
+### What if the sampler doesn't converge on the first try?
+
+The tool runs a convergence check (split-R̂ and ESS) after each run. If the
+thresholds aren't met, by default the tool automatically doubles the
+iteration count and re-runs, up to 2 extra attempts (so 3 total: 5000 →
+10000 → 20000 iters per chain). You'll see a receipt in the results panel
+showing the actual iterations used and the number of attempts.
+
+If you want fully transparent, single-attempt runs, set "Retry doublings"
+to 0 in the Advanced expander.
 
 ### What you get at the end
 
