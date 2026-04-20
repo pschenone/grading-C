@@ -6,7 +6,7 @@ authors:
     given-names: "Pablo"
 version: "0.1.0"
 license: MIT
-repository-code: "https://sites.google.com/site/pschenone/home?pli=1#h.te52tm9oem0y"
+repository-code: "https://github.com/YOUR-USERNAME/bag-grader"
 type: software
 preferred-citation:
   type: article
