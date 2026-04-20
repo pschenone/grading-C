@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use BAG Grader, please cite the underlying paper."
+title: "BAG Grader: a web implementation of Bayesian Adaptive Grading"
+authors:
+  - family-names: "Schenone"
+    given-names: "Pablo"
+version: "0.1.0"
+license: MIT
+repository-code: "https://github.com/YOUR-USERNAME/bag-grader"
+type: software
+preferred-citation:
+  type: article
+  title: "The Hitchhiker's Guide to the Grading Galaxy"
+  authors:
+    - family-names: "Schenone"
+      given-names: "Pablo"
+  year: 2025
+  note: "Working paper"
