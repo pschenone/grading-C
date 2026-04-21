@@ -22,7 +22,7 @@ from bag import (
     default_config_for_class,
     diagnose,
     figure_expected_grades,
-    figure_grade_heatmap,
+    figure_expected_grade_vs_score,
     figure_mixture_components,
     figure_probability_curves,
     nearest_granulated_label,
@@ -306,15 +306,18 @@ with st.expander("Customize: exam structure and grade distribution"):
             "Effective number of exam items (Q)",
             min_value=4, max_value=200, value=60, step=1,
             help=(
-                "The effective number of scorable items in your exam. For a "
-                "multiple-choice exam, this is the number of questions. For an "
-                "essay graded in 5-point increments on a 100-point scale, it's "
-                "100/5 = 20. See the wizard on the right →"
+                "The effective number of scorable items across all assessments "
+                "that are averaged into the final numerical score. For a "
+                "multiple-choice exam, this is the number of questions. For two "
+                "10-question exams graded in half-points and then averaged, "
+                "Q = 2 × 10 × 2 = 40. For an essay graded in 5-point increments "
+                "on a 100-point scale, Q = 100/5 = 20. See the wizard on the "
+                "right →"
             ),
         )
     with col_wizard:
         st.markdown("**Not sure what Q is?**")
-        num_q = st.number_input("Questions on the exam",
+        num_q = st.number_input("Total questions across all averaged exams",
                                 min_value=1, value=12, step=1,
                                 key="wizard_nq")
         scale = st.selectbox(
@@ -327,7 +330,7 @@ with st.expander("Customize: exam structure and grade distribution"):
         scale_factor = {"Full points": 1, "Half points": 2, "Third points": 3,
                         "Quarter points": 4, "Fifth points": 5}[scale]
         suggested_Q = num_q * scale_factor
-        st.caption(f"→ Suggested Q = **{suggested_Q}**")
+        st.caption(f"→ Suggested Q = **{suggested_Q}**  (example: 2 exams × 10 questions × half-points = 40)")
 
     fix_pi = st.checkbox(
         "Enforce this distribution exactly (don't update π from data)",
@@ -368,13 +371,6 @@ with st.expander("Advanced — you don't need this", expanded=False):
         "You don't need these. Defaults are well-calibrated. These exist "
         "for reproducibility of published results and for users who know "
         "what MCMC is."
-    )
-    st.caption(
-        "This app uses the paper-tuned MCMC kernel from the reference "
-        "implementation: a joint adaptive-Metropolis default with proposal "
-        "scales 0.07/0.07, AM scales 0.3/0.3, target acceptance 0.30, and "
-        "joint-block probability 1.0. These are hidden defaults, not user-"
-        "facing knobs."
     )
     col1, col2 = st.columns(2)
     with col1:
@@ -609,8 +605,26 @@ if out is not None and cfg is not None and scores_stored is not None:
                  "value, auto-retry doubled iterations until diagnostics passed.",
         )
 
-    # --- Grade table ---
-    st.markdown("#### Per-student grades")
+    # --- Boundaries ---
+    pi_mean = out["pi_samples"].mean(axis=0)
+    mu_mean = out["mu_samples"].mean(axis=0)
+    sg_mean = out["sigma_samples"].mean(axis=0)
+    bounds = compute_cutoffs(pi_mean, mu_mean, sg_mean,
+                             cfg.trunc_a, cfg.trunc_b)
+    st.markdown(
+        f"**Model-based boundary cutoffs:** "
+        f"A/B = **{bounds[0]:.1f}**, &nbsp; "
+        f"B/C = **{bounds[1]:.1f}**, &nbsp; "
+        f"C/D = **{bounds[2]:.1f}**, &nbsp; "
+        f"D/E = **{bounds[3]:.1f}**"
+    )
+    st.caption(
+        "These are the score levels where the posterior probability of two "
+        "adjacent grades is equal. They are a consequence of the fitted "
+        "model, not a user-supplied cutoff."
+    )
+
+    # --- Grade table data ---
     resp_mean = out["resp_mean"]
     exp_grade = out["expected_grade"]
     gran_labels = nearest_granulated_label(exp_grade)
@@ -642,62 +656,46 @@ if out is not None and cfg is not None and scores_stored is not None:
     df = pd.DataFrame(rows)
     df = df.sort_values("Expected", ascending=False).reset_index(drop=True)
 
-    st.dataframe(
-        df, use_container_width=True, hide_index=True,
-        column_config={
-            "Score":      st.column_config.NumberColumn(format="%.2f"),
-            "Expected":   st.column_config.NumberColumn(format="%.2f"),
-            "P(A)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
-            "P(B)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
-            "P(C)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
-            "P(D)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
-            "P(E)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
-        },
-        height=min(38 * (len(df) + 1), 560),
-    )
-
-    st.caption(
-        "🟢 confident (>80%) &nbsp;&nbsp; 🟡 uncertain (60–80%) "
-        "&nbsp;&nbsp; 🔴 on the fence (<60%)"
-    )
-
-    # --- Boundaries ---
-    pi_mean = out["pi_samples"].mean(axis=0)
-    mu_mean = out["mu_samples"].mean(axis=0)
-    sg_mean = out["sigma_samples"].mean(axis=0)
-    bounds = compute_cutoffs(pi_mean, mu_mean, sg_mean,
-                             cfg.trunc_a, cfg.trunc_b)
-    st.markdown(
-        f"**Model-based boundary cutoffs:** "
-        f"A/B = **{bounds[0]:.1f}**, &nbsp; "
-        f"B/C = **{bounds[1]:.1f}**, &nbsp; "
-        f"C/D = **{bounds[2]:.1f}**, &nbsp; "
-        f"D/E = **{bounds[3]:.1f}**"
-    )
-    st.caption(
-        "These are the score levels where the posterior probability of two "
-        "adjacent grades is equal. They are a consequence of the fitted "
-        "model, not a user-supplied cutoff."
-    )
-
-    # --- Figures ---
-    st.markdown("#### Figures")
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Expected grades", "Mixture components",
-        "Grade probabilities", "Per-student heatmap",
+    # --- Unified results + visualizations ---
+    st.markdown("#### Results and visualizations")
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "Mixture distributions",
+        "Expected grades with uncertainty",
+        "Expected grade vs score",
+        "Grade probability curves",
+        "Student table",
     ])
     with tab1:
-        fig = figure_expected_grades(scores_stored, out, cfg)
-        st.pyplot(fig, use_container_width=True)
-    with tab2:
         fig = figure_mixture_components(scores_stored, out, cfg)
         st.pyplot(fig, use_container_width=True)
+    with tab2:
+        fig = figure_expected_grades(scores_stored, out, cfg)
+        st.pyplot(fig, use_container_width=True)
     with tab3:
-        fig = figure_probability_curves(scores_stored, out, cfg)
+        fig = figure_expected_grade_vs_score(scores_stored, out, cfg)
         st.pyplot(fig, use_container_width=True)
     with tab4:
-        fig = figure_grade_heatmap(scores_stored, out, cfg, student_ids=ids_stored)
+        fig = figure_probability_curves(scores_stored, out, cfg)
         st.pyplot(fig, use_container_width=True)
+    with tab5:
+        st.dataframe(
+            df, use_container_width=True, hide_index=True,
+            column_config={
+                "Score":      st.column_config.NumberColumn(format="%.2f"),
+                "Expected":   st.column_config.NumberColumn(format="%.2f"),
+                "P(A)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
+                "P(B)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
+                "P(C)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
+                "P(D)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
+                "P(E)":       st.column_config.ProgressColumn(format="%.2f", min_value=0, max_value=1),
+            },
+            height=min(38 * (len(df) + 1), 560),
+        )
+        st.markdown(
+            "🟢 confident (>80%) &nbsp;&nbsp; 🟡 uncertain (60–80%) "
+            "&nbsp;&nbsp; 🔴 on the fence (<60%)",
+            unsafe_allow_html=True,
+        )
 
     # --- Downloads ---
     st.markdown("#### Downloads")
@@ -772,13 +770,12 @@ if out is not None and cfg is not None and scores_stored is not None:
         zip_buf = io.BytesIO()
         with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
             for name, fn in [
-                ("expected_grades.png", figure_expected_grades),
                 ("mixture_components.png", figure_mixture_components),
+                ("expected_grades.png", figure_expected_grades),
+                ("expected_grade_vs_score.png", figure_expected_grade_vs_score),
                 ("grade_probabilities.png", figure_probability_curves),
-                ("grade_heatmap.png", figure_grade_heatmap),
             ]:
-                fig = fn(scores_stored, out, cfg) if "heatmap" not in name \
-                    else fn(scores_stored, out, cfg, student_ids=ids_stored)
+                fig = fn(scores_stored, out, cfg)
                 img_buf = io.BytesIO()
                 fig.savefig(img_buf, dpi=150, bbox_inches="tight")
                 zf.writestr(name, img_buf.getvalue())
@@ -798,9 +795,7 @@ if out is not None and cfg is not None and scores_stored is not None:
 
 st.markdown(
     '<div class="footer-note">'
-    "Your data stays in your browser session. Nothing is stored on a server "
-    "or transmitted outside your own use. Refreshing the page clears "
-    "everything. &nbsp;•&nbsp; Based on Schenone (2025), "
+    "Based on Schenone (2025), "
     '<em>The Hitchhiker&apos;s Guide to the Grading Galaxy</em>.'
     "</div>",
     unsafe_allow_html=True,
