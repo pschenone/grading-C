@@ -24,8 +24,8 @@ from matplotlib.table import Table
 from .sampler import GraderConfig, diagnose, nearest_granulated_label
 from .visualize import (
     GRADE_COLORS,
-    figure_expected_grade_vs_score,
     figure_expected_grades,
+    figure_grade_heatmap,
     figure_mixture_components,
     figure_probability_curves,
 )
@@ -88,7 +88,7 @@ def _fig_summary(
     lines.append(("Status",                   status_map.get(diag["status"], "?"), None))
     lines.append(("Max split-R̂",               f"{diag['max_rhat']:.4f} (target ≤ 1.01)", None))
     lines.append(("Min effective sample size", f"{diag['min_ess']:.0f} (target ≥ 400)", None))
-    lines.append(("Proposal acceptance rate",   f"{diag['accept_rate']:.3f} (target ≈ 0.25)", None))
+    lines.append(("Proposal acceptance rate",   f"{diag['accept_rate']:.3f} (target ≈ 0.30)", None))
     lines.append(("", None, "blank"))
 
     lines.append(("Grade distribution in this class", None, "header"))
@@ -248,13 +248,15 @@ def build_pdf_report(
         pdf.savefig(fig3, bbox_inches="tight")
         plt.close(fig3)
 
-        for fn in [
-            figure_mixture_components,
-            figure_expected_grades,
-            figure_expected_grade_vs_score,
-            figure_probability_curves,
-        ]:
+        for fn in [figure_expected_grades, figure_mixture_components,
+                   figure_probability_curves]:
             f = fn(scores, out, cfg)
+            pdf.savefig(f, bbox_inches="tight")
+            plt.close(f)
+
+        # Heatmap only if class is small enough to fit
+        if scores.size <= 80:
+            f = figure_grade_heatmap(scores, out, cfg, student_ids=student_ids)
             pdf.savefig(f, bbox_inches="tight")
             plt.close(f)
 

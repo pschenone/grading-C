@@ -32,12 +32,11 @@ The tool provides six presets:
 - **Let the data decide (near-uniform prior)** — `[0.2, 0.2, 0.2, 0.2, 0.2]`.
   The most agnostic option. With this preset, the data dominates the posterior
   more strongly, so the final grade distribution is genuinely data-driven.
-- **Skewed high (honors class)** — `[0.30, 0.40, 0.22, 0.06, 0.02]`. A convenience
-  preset for unusually strong cohorts. It is not a paper baseline; it is there
-  for instructors who have a clear prior reason to expect a top-heavy class.
-- **Skewed low (intro / weed-out)** — `[0.06, 0.18, 0.38, 0.28, 0.10]`. Another
-  convenience preset for classes where you expect a heavier lower tail. Again,
-  this is a practical preset rather than a canonical paper default.
+- **Skewed high (honors class)** — `[0.30, 0.40, 0.22, 0.06, 0.02]`. Similar
+  in spirit to the A/B-heavy prior, milder tail.
+- **Skewed low (intro / weed-out)** — `[0.06, 0.18, 0.38, 0.28, 0.10]`. For
+  first-year intro classes or courses designed to separate out students who
+  shouldn't continue in the major.
 
 **What if I get the prior wrong?** The data will pull the posterior away from
 a bad prior, but only so far. How far depends on the concentration mass K_π
@@ -63,13 +62,11 @@ adjacent types.
   (this is the default wizard setting).
 - A 10-question exam graded in half-point increments: Q = 10 × 2 = 20.
 - A single essay graded out of 100 in 5-point increments: Q = 20.
-- If your course grade averages multiple exams, count questions across **all**
-  averaged assessments. For example: 2 exams × 10 questions each × half-point
-  grading gives Q = 2 × 10 × 2 = 40.
 - Two exams averaged together, each Q = 30: Q = 60 (see paper §2.3).
 
-The built-in wizard in the Customize expander computes Q from the **total number
-of questions across all averaged exams** and the grading increments.
+The built-in wizard in the Customize expander computes Q from "number of
+questions" and "grading increments" — it defaults to 12 questions in fifths,
+which gives Q = 60 (the default Q).
 
 **What if I get Q wrong?** If you set Q too high (pretending the exam is
 more precise than it is), the model will be overconfident in drawing sharp
@@ -102,6 +99,8 @@ st.markdown("""
 These exist for reproducibility of published results and for users who
 want to poke at the MCMC internals. If you don't know what MCMC is,
 leave them alone.
+
+The hidden proposal-tuning constants are **not** generic package defaults. This app deliberately uses the **paper-tuned MCMC preset** from the reference implementation: proposal scales 0.07 / 0.07 for `logit(p₀)` and `log b`, adaptive-Metropolis scales 0.3 / 0.3, target acceptance 0.30, and joint-block probability 1.0.
 
 ### Prior calibration knobs
 
@@ -218,15 +217,6 @@ in a way it wouldn't for a larger class.
 For tiny classes (under 10 students), consider whether you have enough
 information to pick a defensible prior at all, or whether the honest
 thing to do is report raw scores.
-""")
-
-st.markdown("## Presentation note")
-
-st.markdown("""
-The Home page now presents the class-level figures first and places the
-per-student probability table as the last tab in the same results section.
-That is deliberate: the figures give the overall statistical picture, while
-the table is the detailed student-level view.
 """)
 
 st.markdown("## Quick summary table")

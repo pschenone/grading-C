@@ -136,7 +136,7 @@ We report:
 
 - **Split-$\hat R$** across chains for $p_0$, $p_1$, $b$, and $\pi$. Target: $\le 1.01$.
 - **Bulk effective sample size (ESS)** via the initial-positive-sequence estimator. Target: $\ge 400$.
-- **Acceptance rate** of the Metropolis proposal. Target: $\approx 0.25$.
+- **Acceptance rate** of the Metropolis proposal. Under the app's paper-tuned default, the target is $\approx 0.30$.
 
 The home page surfaces these through a three-state status badge; the JSON
 and PDF downloads contain the raw numbers.

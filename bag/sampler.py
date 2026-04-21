@@ -173,6 +173,11 @@ class GraderConfig:
     """Configuration for the BAG sampler.
 
     Most users only touch `Q` and `pi0`. Everything else has a reasonable default.
+
+    The hidden MCMC defaults below intentionally mirror the tuned reference-app
+    settings from the original `Final.py`, rather than generic package-neutral
+    values. That makes the web app track the original BAG engine more closely in
+    finite samples.
     """
 
     # --- core ---
@@ -204,8 +209,8 @@ class GraderConfig:
     tail: float = 0.01
 
     # --- proposal distribution ---
-    prop_sd_u0: float = 0.10
-    prop_sd_logb: float = 0.10
+    prop_sd_u0: float = 0.07
+    prop_sd_logb: float = 0.07
 
     # --- numerics ---
     sigma_min: float = 0.20
@@ -216,16 +221,16 @@ class GraderConfig:
     use_block_am: bool = True
     am_t0: int = 30
     am_eps: float = 1e-8
-    am_scale: float = 0.5
-    am_diag_scale: float = 0.5
-    am_target_acc: float = 0.25
+    am_scale: float = 0.3
+    am_diag_scale: float = 0.3
+    am_target_acc: float = 0.30
     am_adapt_window: int = 30
-    am_adapt_gain: float = 0.25
-    am_min_scale: float = 0.05
+    am_adapt_gain: float = 0.40
+    am_min_scale: float = 0.01
     am_max_scale: float = 2.00
     am_diag_min_scale: float = 0.20
     am_diag_max_scale: float = 2.00
-    mix_prob_joint: float = 0.8
+    mix_prob_joint: float = 1.0
 
     # --- populated in __post_init__ ---
     _alpha_dir: np.ndarray = field(default=None, init=False, repr=False)
