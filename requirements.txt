@@ -2,4 +2,4 @@ streamlit>=1.32
 numpy>=1.26,<3.0
 scipy>=1.11
 pandas>=2.0
-matplotlib>=3.7
+matplotlib>=3.7, <4.0
