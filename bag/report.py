@@ -199,8 +199,8 @@ def _fig_grade_table(
             (f"{mode_prob[i]:.2f}", None),
             (flag, flag_color),
         ]
-        for (txt, col), w in zip(cells_data, col_widths):
-            c = tab.add_cell(row_i, (row_i - 1) * len(headers) % len(headers),
+        for col_j, ((txt, col), w) in enumerate(zip(cells_data, col_widths)):
+            c = tab.add_cell(row_i, col_j,
                              w, row_h, text=txt, loc="center")
             c.get_text().set_fontsize(8)
             if col:
