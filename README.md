@@ -4,7 +4,7 @@
 
 Based on Schenone (2025), *The Hitchhiker's Guide to the Grading Galaxy*.
 
-**→ [Live demo](https://YOUR-APP-NAME.streamlit.app)** *(replace with your deployed URL)*
+**→ [Live demo](https://bag-grader-pschenone.streamlit.app)**
 
 ---
 
@@ -129,7 +129,7 @@ A: Streamlit Community Cloud's free tier does not support custom domains. You ca
 A: Only if you are comfortable with your hosting arrangement and institutional rules. For sensitive data, a school-approved deployment is safer than a generic public-hosting setup.
 
 **Q: How long does a run take?**
-A: For a typical class (15–40 students) with default settings (4 chains × 5000 iterations), expect 30–60 seconds on Streamlit's free tier.
+A: For a typical class (15–40 students) with default settings (4 chains × 10000 iterations), expect roughly 1–2 minutes on Streamlit's free tier.
 
 **Q: The convergence diagnostic is yellow. Should I worry?**
 A: Yellow means your results are usable but not perfect. By default, the tool auto-retries with doubled iterations (up to 2 extra attempts) when diagnostics don't meet the strict targets — so if you see yellow at the end, the sampler has already tried escalating. You can raise the retry cap to 3 in the Advanced expander, or manually bump iterations per chain. If it goes red, something's off with your data (e.g., a very unusual score distribution or a class too small for the prior).

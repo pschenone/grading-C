@@ -330,7 +330,7 @@ with st.expander("Customize: exam structure and grade distribution"):
         scale_factor = {"Full points": 1, "Half points": 2, "Third points": 3,
                         "Quarter points": 4, "Fifth points": 5}[scale]
         suggested_Q = num_q * scale_factor
-        st.caption(f"→ Suggested Q = **{suggested_Q}**  (example: 2 exams × 10 questions × half-points = 40)")
+        st.caption(f"→ Suggested Q = **{suggested_Q}**  (example: 3 exams × 4 questions × fifth-points = 60)")
 
     fix_pi = st.checkbox(
         "Enforce this distribution exactly (don't update π from data)",
@@ -400,7 +400,7 @@ with st.expander("Advanced — you don't need this", expanded=False):
     with col2:
         n_chains = st.number_input("MCMC chains", 1, 8, 4, 1)
         iters_per_chain = st.number_input("Iterations per chain (starting)",
-                                          1000, 25000, 5000, 500,
+                                          1000, 25000, 10000, 500,
                                           help="Starting iterations. If the "
                                                "run fails convergence, iterations "
                                                "are doubled automatically up to "
@@ -411,7 +411,7 @@ with st.expander("Advanced — you don't need this", expanded=False):
             index=2,
             help="How many times to double iterations when R̂ or ESS "
                  "fails. 0 = no retry (single run, most transparent). "
-                 "2 = up to 3 attempts (e.g., 5000 → 10000 → 20000). Matches "
+                 "2 = up to 3 attempts (e.g., 10000 → 20000 → 40000). Matches "
                  "the behavior of the reference implementation.",
         )
         rhat_target = st.number_input(

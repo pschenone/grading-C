@@ -187,7 +187,7 @@ class GraderConfig:
 
     # --- MCMC settings ---
     n_chains: int = 4
-    iters_per_chain: int = 5000
+    iters_per_chain: int = 10000
     burn_in_prop: float = 0.25
     thinning: int = 1
 

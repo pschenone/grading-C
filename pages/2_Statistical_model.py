@@ -144,7 +144,7 @@ and PDF downloads contain the raw numbers.
 **Auto-retry.** If the first run fails the R̂ or ESS targets, the tool
 automatically doubles the iteration count and re-runs, up to a
 user-configurable cap (default 2 retries, i.e. up to 3 total attempts:
-5000 → 10000 → 20000 iters per chain). The "Iters / chain" metric in the
+10000 → 20000 → 40000 iters per chain). The "Iters / chain" metric in the
 results panel shows the actual iteration count used, so users always see
 a receipt of how much work was done. Users who want a single,
 deterministic run can set retries to 0 in the Advanced expander.

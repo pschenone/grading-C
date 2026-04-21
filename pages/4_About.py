@@ -22,8 +22,7 @@ st.markdown("## The paper")
 st.markdown("""
 > **Schenone, P. (2025).** *The Hitchhiker's Guide to the Grading Galaxy.*
 
-<!-- TODO: Replace with the actual paper URL (arXiv / SSRN / journal) -->
-[Placeholder link to paper](https://example.com/hitchhiker-grading-galaxy)
+[Paper page](https://sites.google.com/site/pschenone/home#h.te52tm9oem0y)
 
 The paper develops the full theoretical framework: a microfoundation for
 student types based on effort cost and productivity, a formal model of
@@ -49,9 +48,8 @@ so GitHub auto-generates a "Cite this repository" button.
 st.markdown("## Source code")
 
 st.markdown("""
-<!-- TODO: replace YOUR-USERNAME with the actual GitHub handle -->
 The source code for this tool lives at
-[github.com/YOUR-USERNAME/bag-grader](https://github.com/YOUR-USERNAME/bag-grader).
+[github.com/pschenone/grading-C](https://github.com/pschenone/grading-C).
 
 - The full Python package implementing the sampler is in `bag/`.
 - The Streamlit web UI is in `Home.py` and `pages/`.

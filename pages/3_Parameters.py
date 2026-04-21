@@ -64,9 +64,10 @@ adjacent types.
 - A single essay graded out of 100 in 5-point increments: Q = 20.
 - Two exams averaged together, each Q = 30: Q = 60 (see paper §2.3).
 
-The built-in wizard in the Customize expander computes Q from "number of
-questions" and "grading increments" — it defaults to 12 questions in fifths,
-which gives Q = 60 (the default Q).
+The built-in wizard in the Customize expander computes Q from the total number of
+questions across all averaged exams and the grading increments — it defaults to
+3 exams of 4 questions each in fifths, which gives Q = 3 × 4 × 5 = 60 (the
+default Q).
 
 **What if I get Q wrong?** If you set Q too high (pretending the exam is
 more precise than it is), the model will be overconfident in drawing sharp
@@ -155,23 +156,23 @@ chains) at a roughly linear cost in runtime. Don't go below 2.
 
 #### Iterations per chain (starting)
 
-Iterations per chain in the first attempt. **Default: 5000.**
+Iterations per chain in the first attempt. **Default: 10000.**
 
 If the diagnostic thresholds (R̂ and ESS) aren't met, the tool will
 *automatically* double the iteration count and re-run, up to the retry
-cap below. So "5000 starting" means the first attempt runs 5000 iters
+cap below. So "10000 starting" means the first attempt runs 10000 iters
 per chain; if that fails convergence and retries are enabled, subsequent
-attempts run 10000, then 20000, etc.
+attempts run 20000, then 40000, etc.
 
-For 4 chains × 5000 iters, budget 30–60 seconds on the free hosting
-tier. With retries escalating to 20000 iters, budget 2–3 minutes for
+For 4 chains × 10000 iters, budget roughly 1–2 minutes on the free hosting
+tier. With retries escalating to 40000 iters, budget several minutes for
 the worst case.
 
 #### Retry doublings if diagnostics are poor
 
 How many times the sampler doubles the iteration count when R̂ or ESS
 fails the targets. **Default: 2.** This means up to 3 total attempts:
-5000 → 10000 → 20000 iters per chain.
+10000 → 20000 → 40000 iters per chain.
 
 - **0 = no retry.** The sampler runs once with whatever iteration count
   you set. Most transparent; you see exactly what the first attempt did.
@@ -231,7 +232,7 @@ st.markdown("""
 | TAIL | 0.01 | Stronger/weaker separation prior | Changes implied p₁ |
 | TAIL_PI | 0.05 | Larger/smaller classes, different A-rarity | Changes K_π |
 | Chains | 4 | Never reduce; may increase to 6–8 | More = slower, more stable |
-| Iterations (start) | 5000 | If you want more up-front precision | More = slower, more accurate |
+| Iterations (start) | 10000 | If you want more up-front precision | More = slower, more accurate |
 | Retries | 2 | 0 for reproducibility, 3 for hardest cases | More = auto-escalates silently |
 | Max R̂ target | 1.01 | 1.05 for more permissive convergence | Looser → can declare convergence prematurely |
 | Min ESS target | 400 | Lower only for demo purposes | Lower → noisier estimates |

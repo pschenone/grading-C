@@ -83,8 +83,8 @@ not to update — but that's usually not what you want.
 
 The tool runs a convergence check (split-R̂ and ESS) after each run. If the
 thresholds aren't met, by default the tool automatically doubles the
-iteration count and re-runs, up to 2 extra attempts (so 3 total: 5000 →
-10000 → 20000 iters per chain). You'll see a receipt in the results panel
+iteration count and re-runs, up to 2 extra attempts (so 3 total: 10000 →
+20000 → 40000 iters per chain). You'll see a receipt in the results panel
 showing the actual iterations used and the number of attempts.
 
 If you want fully transparent, single-attempt runs, set "Retry doublings"
