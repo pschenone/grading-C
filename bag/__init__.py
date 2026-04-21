@@ -20,6 +20,7 @@ from .sampler import (
 from .report import build_pdf_report
 from .visualize import (
     figure_expected_grades,
+    figure_expected_grade_vs_score,
     figure_grade_heatmap,
     figure_mixture_components,
     figure_probability_curves,
@@ -32,6 +33,7 @@ __all__ = [
     "GraderConfig", "compute_cutoffs", "default_config_for_class", "diagnose",
     "nearest_granulated_label", "run_bag_sampler", "run_bag_sampler_with_retry",
     "build_pdf_report",
-    "figure_expected_grades", "figure_grade_heatmap",
-    "figure_mixture_components", "figure_probability_curves",
+    "figure_expected_grades", "figure_expected_grade_vs_score",
+    "figure_grade_heatmap", "figure_mixture_components",
+    "figure_probability_curves",
 ]
